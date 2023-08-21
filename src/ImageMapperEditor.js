@@ -1,5 +1,5 @@
-import { editor, view } from '@overlapmedia/imagemapper';
-import React from 'react';
+import { editor, view } from "@overlapmedia/imagemapper";
+import React from "react";
 
 function ImageMapperEditor({
   options = {},
@@ -43,7 +43,7 @@ function ImageMapperEditor({
     }
   }, [mode]);
 
-  const [width = 1200, height = 600] = [options.width, options.height];
+  const [width = 750, height = 600] = [options.width, options.height];
 
   return (
     <svg
@@ -62,11 +62,11 @@ function ImageMapperEditor({
 }
 
 export const Mode = Object.freeze({
-  RECT: 'rect',
-  CIRCLE: 'circle',
-  ELLIPSE: 'ellipse',
-  POLYGON: 'polygon',
-  SELECT: 'selectMode',
+  RECT: "rect",
+  CIRCLE: "circle",
+  ELLIPSE: "ellipse",
+  POLYGON: "polygon",
+  SELECT: "selectMode",
 });
 
 export default ImageMapperEditor;

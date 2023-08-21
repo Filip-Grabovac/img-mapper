@@ -1,15 +1,15 @@
-import './App.css';
-import React, { useState } from 'react';
-import ImageMapperEditor, { Mode } from './ImageMapperEditor';
-import Plus from '../src/images/plus.png';
-import X from '../src/images/remove.png';
+import "./App.css";
+import React, { useState } from "react";
+import ImageMapperEditor, { Mode } from "./ImageMapperEditor";
+import Plus from "../src/images/plus.png";
 
 function App() {
   const [shape, setShape] = useState(Mode.RECT);
   const [img, setImg] = useState();
   const [zoneInfo, setZoneInfo] = useState(false);
   const [rowNum, setRowNum] = useState(1);
-  const [formData, setFormData] = useState();
+  const [zones, setZones] = useState([]);
+  const [shapesData, setShapesData] = useState([]);
 
   const handleImageUpload = (event) => {
     const selectedImage = event.target.files[0];
@@ -23,32 +23,77 @@ function App() {
     const tagName = e.target.tagName.toLowerCase();
 
     if (
-      tagName === 'ellipse' ||
-      tagName === 'polygon' ||
-      tagName === 'circle' ||
-      tagName === 'rect'
+      tagName === "ellipse" ||
+      tagName === "polygon" ||
+      tagName === "circle" ||
+      tagName === "rect"
     ) {
       setZoneInfo(true);
-      if (document.querySelector('.highlighted'))
-        document.querySelector('.highlighted').classList.remove('highlighted');
-      e.target.classList.add('highlighted');
+      if (document.querySelector(".highlighted"))
+        document.querySelector(".highlighted").classList.remove("highlighted");
+      e.target.classList.add("highlighted");
     }
   }
 
   function setActiveLink(e) {
-    document.querySelector('.active-link').classList.remove('active-link');
-    e.target.classList.add('active-link');
+    document.querySelector(".active-link").classList.remove("active-link");
+    e.target.classList.add("active-link");
   }
 
   function addZone(e) {
     e.preventDefault();
 
-    console.log(document.querySelector('.highlighted'));
+    const highlightedElement = document.querySelector(".highlighted");
 
-    document.querySelector('.highlighted').classList.add('done');
-    document.querySelector('.highlighted').classList.remove('highlighted');
-    setShape(Mode.SELECT);
-    setZoneInfo(false);
+    if (highlightedElement) {
+      const tagName = highlightedElement.tagName.toLowerCase();
+      let x, y, width, height;
+
+      if (tagName === "rect") {
+        x = parseFloat(highlightedElement.getAttribute("x"));
+        y = parseFloat(highlightedElement.getAttribute("y"));
+        width = parseFloat(highlightedElement.getAttribute("width"));
+        height = parseFloat(highlightedElement.getAttribute("height"));
+      } else if (tagName === "polygon") {
+        const points = highlightedElement.getAttribute("points").split(" ");
+        const xCoords = points.map((point) => parseFloat(point.split(",")[0]));
+        const yCoords = points.map((point) => parseFloat(point.split(",")[1]));
+
+        x = Math.min(...xCoords);
+        y = Math.min(...yCoords);
+        const maxX = Math.max(...xCoords);
+        const maxY = Math.max(...yCoords);
+        width = maxX - x;
+        height = maxY - y;
+      }
+
+      const numOfSeatsInputs = document.querySelectorAll(".num-of-seats");
+      const numOfSeats = Array.from(numOfSeatsInputs).map((input) => {
+        return {
+          row: parseInt(input.getAttribute("data-row")),
+          count: parseInt(input.value),
+        };
+      });
+
+      const seatsPrice = parseFloat(
+        document.querySelector(".seats-price").value
+      );
+
+      const zoneData = {
+        x,
+        y,
+        width,
+        height,
+        seats: numOfSeats,
+        price: seatsPrice,
+      };
+
+      setZones([...zones, zoneData]);
+
+      highlightedElement.classList.remove("highlighted");
+      setShape(Mode.SELECT);
+      setZoneInfo(false);
+    }
   }
 
   return (
@@ -57,7 +102,7 @@ function App() {
         {!img && (
           <label className="add-image-label">
             <input
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
               type="file"
               accept="image/*"
               onChange={handleImageUpload}
@@ -118,7 +163,7 @@ function App() {
             <ImageMapperEditor
               mode={shape}
               cb={(editor) => {
-                editor.loadImage(img, 700, 350);
+                editor.loadImage(img, 700, 450);
                 editor.polygon();
               }}
               options={{}}
@@ -126,6 +171,19 @@ function App() {
             />
           </>
         )}
+      </div>
+      <div className="zone-list">
+        <h2>Zones:</h2>
+        <ul>
+          {zones.map((zone, index) => (
+            <li key={index}>
+              Zone {index + 1}: x: {zone.x}, y: {zone.y}, width: {zone.width},
+              height: {zone.height}
+              <br />
+              Seats: {JSON.stringify(zone.seats)}, Price: {zone.price}
+            </li>
+          ))}
+        </ul>
       </div>
       <div>
         {zoneInfo && (
@@ -163,7 +221,7 @@ function App() {
                 className="seats-price"
                 type="number"
                 name="seats_price"
-                placeholder={`Cijena sjelada u zoni`}
+                placeholder={`Cijena sjedala u zoni`}
               />
               <button type="submit">Spremi zonu</button>
             </form>
