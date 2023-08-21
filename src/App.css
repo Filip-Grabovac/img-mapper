@@ -6,7 +6,7 @@
   cursor: pointer;
 }
 .highlighted {
-  fill: blue;
+  fill: green;
 }
 .image-editor-wrapper {
   display: flex;
@@ -30,8 +30,21 @@
 
 .seats-form img {
   width: 30px;
+  display: block;
   cursor: pointer;
-  margin-left: 20px;
+  margin: 10px auto 0;
+}
+.seats-form p {
+  margin: 0;
+  text-align: center;
+}
+.seats-form button {
+  margin: 20px auto 0;
+  width: fit-content;
+  display: block;
+}
+.seats-form input {
+  display: block;
 }
 .test {
   background-color: red;
@@ -55,4 +68,9 @@
 }
 .seats-container {
   position: relative;
+}
+.done {
+  pointer-events: none;
+  cursor: not-allowed;
+  fill: red;
 }
