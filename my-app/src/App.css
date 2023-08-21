@@ -1,0 +1,58 @@
+.shape-switcher a {
+  margin-right: 10px;
+}
+.image-editor-wrapper .add-image {
+  width: 50px;
+  cursor: pointer;
+}
+.highlighted {
+  fill: blue;
+}
+.image-editor-wrapper {
+  display: flex;
+}
+.seats-place {
+  margin-top: 40px;
+}
+.seats-place .seat {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgb(5, 226, 5);
+  cursor: move;
+  overflow: auto;
+  display: inline-block;
+  margin-left: 10px;
+}
+.seats-place .seat:first-child {
+  margin-left: 0;
+}
+
+.seats-form img {
+  width: 30px;
+  cursor: pointer;
+  margin-left: 20px;
+}
+.test {
+  background-color: red;
+  height: 200px;
+  width: 200px;
+}
+.dropped-item {
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  background-color: rgb(5, 226, 5);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.dropped-item:hover {
+  background-color: rgb(0, 160, 0);
+}
+.active-link {
+  color: rgb(5, 226, 5);
+}
+.seats-container {
+  position: relative;
+}
